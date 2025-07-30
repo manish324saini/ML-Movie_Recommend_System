@@ -14,6 +14,7 @@ file_id = os.getenv("FILE_ID")
 api_key = os.getenv("API_KEY")
 url = f"https://drive.google.com/uc?id={file_id}"
 local_filename = "similarity1.pkl"
+
 # Remove corrupted file
 if os.path.exists(local_filename):
     os.remove(local_filename)
@@ -43,7 +44,7 @@ def recommend(movie):
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
     recommened_movies = []
     recommended_movie_posters = []
-    for i in distances[1:6]:
+    for i in distances[1:11]:
         # fetch the movie poster
         #time.sleep(2.0)
         movie_id = movies_df.iloc[i[0]].movie_id
@@ -51,16 +52,20 @@ def recommend(movie):
         recommened_movies.append(movies_df.iloc[i[0]].title)
     return recommened_movies, recommended_movie_posters
 
-st.title('Top 5 Movies Recommender Model')
+st.title('Top 10 Movies Recommender Model')
 
 # Load into pandas
 movies_df = pd.read_pickle("movies.pkl")
+
+
+
 selected_Movie_option = st.selectbox(
     "How would you like to be contacted?",
     (movies_df['title'].values.tolist()),
 )
 
 st.write("You selected:", selected_Movie_option)
+
 st.write("Discover similar movies — click the button below!", selected_Movie_option)
 
 if st.button("Go for Recommendation"):
