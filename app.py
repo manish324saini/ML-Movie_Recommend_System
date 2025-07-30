@@ -52,7 +52,7 @@ def recommend(movie):
         recommened_movies.append(movies_df.iloc[i[0]].title)
     return recommened_movies, recommended_movie_posters
 
-st.title('Top 10 Movies Recommender Model')
+st.title('Smart Movie Selection ML Model')
 
 # Load into pandas
 movies_df = pd.read_pickle("movies.pkl")
@@ -60,15 +60,13 @@ movies_df = pd.read_pickle("movies.pkl")
 
 
 selected_Movie_option = st.selectbox(
-    "How would you like to be contacted?",
+    "Select your movie for suggestions?",
     (movies_df['title'].values.tolist()),
 )
 
-st.write("You selected:", selected_Movie_option)
+st.write("Unlock Similar Recommendations Movies")
 
-st.write("Discover similar movies — click the button below!", selected_Movie_option)
-
-if st.button("Go for Recommendation"):
+if st.button("Let the Model Decide"):
     recommended_movie_names,recommended_movie_posters = recommend(selected_Movie_option)
     cols = st.columns(len(recommended_movie_names))
     for i in range(len(recommended_movie_names)):
