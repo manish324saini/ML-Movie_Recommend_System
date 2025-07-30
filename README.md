@@ -17,8 +17,8 @@ A simple and effective content-based movie recommender system built with Python,
 
 ## 🚀 Demo
 
-👉 [Live App on Streamlit Cloud](https://your-app-url.streamlit.app)  
-*(Replace with your actual URL)*
+👉 [Live App on Streamlit Cloud](https://ml-movierecommendsystem-fzdsjkduhr7agsjzy2sote.streamlit.app/)  
+
 
 ---
 
