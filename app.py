@@ -6,13 +6,14 @@ import time
 import os
 import requests
 import gdown
+from dotenv import load_dotenv
 
+load_dotenv()
 # Replace with your actual file ID from Google Drive
-file_id = "17w_92dgTo-jnaYPXgVg-nax5fFA1MEW_"
+file_id = os.getenv("FILE_ID")
+api_key = os.getenv("API_KEY")
 url = f"https://drive.google.com/uc?id={file_id}"
 local_filename = "similarity1.pkl"
-
-# Download file if it doesn't exist
 # Remove corrupted file
 if os.path.exists(local_filename):
     os.remove(local_filename)
@@ -28,7 +29,7 @@ except Exception as e:
     print(f"Failed to load model: {e}")
 def fetch_poster(movie_id):
     try:
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=745b020748bcda64e7ad92a6be03853a&language=en-US"
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
@@ -42,7 +43,7 @@ def recommend(movie):
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
     recommened_movies = []
     recommended_movie_posters = []
-    for i in distances[1:11]:
+    for i in distances[1:6]:
         # fetch the movie poster
         #time.sleep(2.0)
         movie_id = movies_df.iloc[i[0]].movie_id
@@ -50,21 +51,16 @@ def recommend(movie):
         recommened_movies.append(movies_df.iloc[i[0]].title)
     return recommened_movies, recommended_movie_posters
 
-st.title('Top 10 Movies Recommender Model')
+st.title('Top 5 Movies Recommender Model')
 
-#similarity = pd.read_pickle("similarity1.pkl")
 # Load into pandas
 movies_df = pd.read_pickle("movies.pkl")
-
-
-
 selected_Movie_option = st.selectbox(
     "How would you like to be contacted?",
     (movies_df['title'].values.tolist()),
 )
 
 st.write("You selected:", selected_Movie_option)
-
 st.write("Discover similar movies — click the button below!", selected_Movie_option)
 
 if st.button("Go for Recommendation"):
