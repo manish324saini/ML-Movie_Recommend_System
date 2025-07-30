@@ -3,13 +3,33 @@ import streamlit as st
 import pandas as pd
 import pickle
 import time
+import os
 import requests
+import gdown
 
+# Replace with your actual file ID from Google Drive
+file_id = "17w_92dgTo-jnaYPXgVg-nax5fFA1MEW_"
+url = f"https://drive.google.com/uc?id={file_id}"
+local_filename = "similarity1.pkl"
 
+# Download file if it doesn't exist
+# Remove corrupted file
+if os.path.exists(local_filename):
+    os.remove(local_filename)
+
+# Re-download using gdown
+gdown.download(url, local_filename, quiet=False)
+print("File size:", os.path.getsize(local_filename), "bytes")
+# Safely load the pickle file
+try:
+    similarity = pd.read_pickle(local_filename)
+    print("Model loaded successfully.")
+except Exception as e:
+    print(f"Failed to load model: {e}")
 def fetch_poster(movie_id):
     try:
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=745b020748bcda64e7ad92a6be03853a&language=en-US"
-        response = requests.get(url, timeout=10)
+        response = requests.get(url)
         response.raise_for_status()
         data = response.json()
         return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
@@ -32,8 +52,10 @@ def recommend(movie):
 
 st.title('Top 5 Movies Recommender Model')
 
+#similarity = pd.read_pickle("similarity1.pkl")
+# Load into pandas
 movies_df = pd.read_pickle("movies.pkl")
-similarity = pd.read_pickle("similarity.pkl")
+
 
 
 selected_Movie_option = st.selectbox(
